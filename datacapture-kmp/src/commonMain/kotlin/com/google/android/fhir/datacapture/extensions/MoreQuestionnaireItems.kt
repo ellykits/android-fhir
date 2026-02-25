@@ -297,13 +297,15 @@ internal val Questionnaire.Item.minValue
   get() = this.extension.find { it.url == MIN_VALUE_EXTENSION_URL }?.value
 
 internal val Questionnaire.Item.minValueCqfCalculatedValueExpression: Expression?
-  get() = this.extension.find { it.url == MIN_VALUE_EXTENSION_URL }?.cqfCalculatedValueExpression
+  get() =
+    this.extension.find { it.url == MIN_VALUE_EXTENSION_URL }?.value?.cqfCalculatedValueExpression
 
 internal val Questionnaire.Item.maxValue
   get() = this.extension.find { it.url == MAX_VALUE_EXTENSION_URL }?.value
 
 internal val Questionnaire.Item.maxValueCqfCalculatedValueExpression: Expression?
-  get() = this.extension.find { it.url == MAX_VALUE_EXTENSION_URL }?.cqfCalculatedValueExpression
+  get() =
+    this.extension.find { it.url == MAX_VALUE_EXTENSION_URL }?.value?.cqfCalculatedValueExpression
 
 // ********************************************************************************************** //
 //                                                                                                //

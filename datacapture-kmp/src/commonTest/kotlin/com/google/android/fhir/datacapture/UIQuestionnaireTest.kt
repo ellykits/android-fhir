@@ -25,6 +25,7 @@ import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
@@ -39,6 +40,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.printToLog
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.lifecycle.Lifecycle
@@ -50,11 +52,13 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.android.fhir.datacapture.extensions.FhirR4String
 import com.google.android.fhir.datacapture.views.components.ADD_REPEATED_GROUP_BUTTON_TAG
 import com.google.android.fhir.datacapture.views.components.DELETE_REPEATED_GROUP_ITEM_BUTTON_TAG
+import com.google.android.fhir.datacapture.views.components.ERROR_TEXT_TAG
 import com.google.android.fhir.datacapture.views.components.HINT_HEADER_TAG
 import com.google.android.fhir.datacapture.views.components.QUESTIONNAIRE_BOTTOM_NAVIGATION_TEST_TAG
 import com.google.android.fhir.datacapture.views.components.QUESTIONNAIRE_PAGE_NAVIGATION_BUTTON_TEST_TAG
 import com.google.android.fhir.datacapture.views.components.QUESTION_HEADER_TAG
 import com.google.android.fhir.datacapture.views.components.REPEATED_GROUP_INSTANCE_HEADER_TITLE_TAG
+import com.google.android.fhir.datacapture.views.components.SLIDER_TAG
 import com.google.android.fhir.datacapture.views.factories.NO_CHOICE_RADIO_BUTTON_TAG
 import com.google.android.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
 import com.google.fhir.model.r4.Enumeration
@@ -508,6 +512,31 @@ class UIQuestionnaireTest {
         .assertIsDisplayed()
         .assertIsEnabled()
     }
+
+  @Test
+  fun showErrorOnSliderViewProgressAboveMaxValue() = runComposeUiTest {
+    setQuestionnaireContent("files/component_slider.json")
+    onNodeWithTag(SLIDER_TAG).performSemanticsAction(SemanticsActions.SetProgress) {
+      it.invoke(20f)
+    }
+    onRoot().printToLog("Just Anything!!")
+    onNodeWithTag(ERROR_TEXT_TAG).assertIsDisplayed()
+    onNodeWithTag(ERROR_TEXT_TAG).assertTextEquals("Maximum value allowed is:15 ")
+  }
+
+  @Test
+  fun sliderValueToShouldComeFromTheMaxValueExtension() = runComposeUiTest {
+    setQuestionnaireContent("files/component_slider.json")
+    onNodeWithTag(SLIDER_TAG)
+      .assertRangeInfoEquals(ProgressBarRangeInfo(current = 0f, range = 0f..15f, steps = 14))
+  }
+
+  @Test
+  fun sliderValueToShouldComeFromTheMaxValueExtensionWithCQF_calculatedValue() = runComposeUiTest {
+    setQuestionnaireContent("files/component_slider_with_cqf_calculatedValue.json")
+    onNodeWithTag(SLIDER_TAG)
+      .assertRangeInfoEquals(ProgressBarRangeInfo(current = 0f, range = 0f..127f, steps = 126))
+  }
 
   private suspend fun ComposeUiTest.setQuestionnaireContent(
     fileName: String,

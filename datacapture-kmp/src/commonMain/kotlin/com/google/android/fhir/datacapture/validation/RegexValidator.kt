@@ -35,8 +35,9 @@ internal const val REGEX_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinitio
 internal object RegexValidator :
   AnswerExtensionConstraintValidator(
     url = REGEX_EXTENSION_URL,
-    predicate = predicate@{ constraintValue: Any, answer: QuestionnaireResponse.Item.Answer ->
-        val regex = getValue(constraintValue)
+    predicate =
+      predicate@{ constraintValue: Extension.Value, answer: QuestionnaireResponse.Item.Answer ->
+        val regex = constraintValue.asKotlinString()
         if (regex == null || answer.value == null) {
           return@predicate false
         }
@@ -48,14 +49,9 @@ internal object RegexValidator :
           false
         }
       },
-    messageGenerator = { constraintValue: Any ->
-      getString(Res.string.regex_validation_error_msg, getValue(constraintValue) as kotlin.String)
+    messageGenerator = { constraintValue: Extension.Value ->
+      getString(Res.string.regex_validation_error_msg, constraintValue.asKotlinString().toString())
     },
   )
 
-private fun getValue(constraintValue: Any): kotlin.String? =
-  when (constraintValue) {
-    is String -> constraintValue.value
-    is Extension.Value.String -> constraintValue.asString()?.value?.value
-    else -> null
-  }
+private fun Extension.Value.asKotlinString(): kotlin.String? = asString()?.value?.value

@@ -43,9 +43,10 @@ import com.google.android.fhir.datacapture.extensions.isHidden
 import com.google.android.fhir.datacapture.extensions.isPaginated
 import com.google.android.fhir.datacapture.extensions.isRepeatedGroup
 import com.google.android.fhir.datacapture.extensions.localizedTextAnnotatedString
-import com.google.android.fhir.datacapture.extensions.maxValueCqfCalculatedValueExpression
-import com.google.android.fhir.datacapture.extensions.minValueCqfCalculatedValueExpression
+import com.google.android.fhir.datacapture.extensions.maxValue
+import com.google.android.fhir.datacapture.extensions.minValue
 import com.google.android.fhir.datacapture.extensions.packRepeatedGroups
+import com.google.android.fhir.datacapture.extensions.populateCqfCalculatedValue
 import com.google.android.fhir.datacapture.extensions.questionnaireLaunchContexts
 import com.google.android.fhir.datacapture.extensions.shouldHaveNestedItemsUnderAnswers
 import com.google.android.fhir.datacapture.extensions.unpackRepeatedGroups
@@ -1067,16 +1068,16 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
               answersChangedCallback = answersChangedCallback,
               enabledAnswerOptions = enabledQuestionnaireAnswerOptions,
               minAnswerValue =
-                questionnaireItem.minValueCqfCalculatedValueExpression?.let {
+                questionnaireItem.minValue?.populateCqfCalculatedValue {
                   expressionEvaluator
                     .evaluateExpressionValue(questionnaireItem, questionnaireResponseItem, it)
-                    ?.singleOrNull() as Extension.Value?
+                    ?.singleOrNull()
                 },
               maxAnswerValue =
-                questionnaireItem.maxValueCqfCalculatedValueExpression?.let {
+                questionnaireItem.maxValue?.populateCqfCalculatedValue {
                   expressionEvaluator
                     .evaluateExpressionValue(questionnaireItem, questionnaireResponseItem, it)
-                    ?.singleOrNull() as Extension.Value?
+                    ?.singleOrNull()
                 },
               draftAnswer = draftAnswerMap[questionnaireItem],
               enabledDisplayItems =
