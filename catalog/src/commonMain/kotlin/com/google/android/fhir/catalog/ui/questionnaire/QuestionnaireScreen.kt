@@ -60,6 +60,7 @@ import com.google.android.fhir.catalog.ui.questionnaire.components.ErrorStateTog
 import com.google.android.fhir.catalog.ui.questionnaire.components.ValidationErrorDialog
 import com.google.android.fhir.datacapture.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -70,6 +71,7 @@ fun QuestionnaireScreen(
   viewModel: QuestionnaireViewModel,
   title: String,
   fileName: String,
+  coroutineScope: CoroutineScope,
   validationFileName: String? = null,
   showReviewPage: Boolean = false,
   showReviewPageFirst: Boolean = false,
@@ -79,7 +81,6 @@ fun QuestionnaireScreen(
 ) {
   var isErrorState by remember { mutableStateOf(false) }
   var questionnaireJson by remember { mutableStateOf<String?>(null) }
-  val scope = rememberCoroutineScope()
 
   val skipLogicTitle = stringResource(Res.string.behavior_name_skip_logic)
   val calculatedExpressionTitle = stringResource(Res.string.behavior_name_calculated_expression)
@@ -167,7 +168,7 @@ fun QuestionnaireScreen(
               showRequiredText = isErrorState,
               showOptionalText = isErrorState,
               onSubmit = { getResponse ->
-                scope.launch {
+                coroutineScope.launch {
                   val response = getResponse()
                   val errors = viewModel.validateAndGetErrors(json, response)
 
