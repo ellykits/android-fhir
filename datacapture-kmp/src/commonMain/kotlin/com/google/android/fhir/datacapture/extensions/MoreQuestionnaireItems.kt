@@ -948,7 +948,7 @@ private fun Questionnaire.Item.createQuestionnaireResponseItemAnswers():
   // The [ResourceMapper] at L260 wrongfully sets the initial property of questionnaire after
   // evaluation of initial-expression.
   require(answerOption.isEmpty() || initial.isEmpty() || initialExpression != null) {
-    "Questionnaire item $linkId has both initial value(s) and has answerOption. See rule que-11 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial."
+    "Questionnaire item ${linkId.value} has both initial value(s) and has answerOption. See rule que-11 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial."
   }
 
   // https://build.fhir.org/ig/HL7/sdc/behavior.html#initial
@@ -958,7 +958,7 @@ private fun Questionnaire.Item.createQuestionnaireResponseItemAnswers():
   if (
     answerOption.initialSelected.isEmpty() &&
       (initial.isEmpty() ||
-        (initialFirstRep?.value != null && initialFirstRep.value.asQuantity()?.value == null))
+        (initialFirstRep?.value?.asQuantity() != null && initialFirstRep.value.asQuantity()?.value?.value == null))
   ) {
     return mutableListOf()
   }
@@ -968,20 +968,24 @@ private fun Questionnaire.Item.createQuestionnaireResponseItemAnswers():
       type.value == Questionnaire.QuestionnaireItemType.Display
   ) {
     throw IllegalArgumentException(
-      "Questionnaire item $linkId has initial value(s) and is a group or display item. See rule que-8 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial.",
+      "Questionnaire item ${linkId.value} has initial value(s) and is a group or display item. See rule que-8 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial.",
     )
   }
 
   if ((answerOption.initialSelected.size > 1 || initial.size > 1) && repeats?.value == false) {
     throw IllegalArgumentException(
-      "Questionnaire item $linkId can only have multiple initial values for repeating items. See rule que-13 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial.",
+      "Questionnaire item ${linkId.value} can only have multiple initial values for repeating items. See rule que-13 at https://www.hl7.org/fhir/questionnaire-definitions.html#Questionnaire.item.initial.",
     )
   }
 
-  val thiso: List<Questionnaire.Item.Initial.Value> = initial.map { it.value }
-  val this1: List<Questionnaire.Item.AnswerOption.Value> = answerOption.initialSelected
+  val answersFromInitial =
+    initial.map { it.toQuestionnaireResponseItemAnswer() }.map { it.toBuilder() }
+  val answersFromInitialSelected =
+    answerOption.initialSelected
+      .map { it.toQuestionnaireResponseItemAnswer() }
+      .map { it.toBuilder() }
 
-  return mutableListOf()
+  return (answersFromInitial + answersFromInitialSelected).toMutableList()
 }
 
 /**
