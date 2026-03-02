@@ -19,7 +19,7 @@ package com.google.android.fhir.datacapture.enablement
 import com.google.android.fhir.datacapture.XFhirQueryResolver
 import com.google.android.fhir.datacapture.extensions.enableWhenExpression
 import com.google.android.fhir.datacapture.fhirpath.ExpressionEvaluator
-import com.google.android.fhir.datacapture.fhirpath.convertToBoolean
+import com.google.android.fhir.datacapture.fhirpath.FhirPathService
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import com.google.fhir.model.r4.Resource
@@ -138,7 +138,7 @@ internal class EnablementEvaluator(
 
     // Evaluate `enableWhenExpression`.
     if (enableWhenExpression != null) {
-      return convertToBoolean(
+      return FhirPathService.convertToBoolean(
         expressionEvaluator.evaluateExpression(
           questionnaireItem,
           questionnaireResponseItem,

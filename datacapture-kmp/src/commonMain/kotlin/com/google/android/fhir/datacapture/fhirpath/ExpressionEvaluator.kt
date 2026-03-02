@@ -150,11 +150,11 @@ internal class ExpressionEvaluator(
     if (expression == null) return emptyList()
     val variables =
       extractItemDependentVariables(expression, questionnaireItem, questionnaireResponseItem)
-    return r4FhirPathEngine.evaluateExpression(
+    return FhirPathService.evaluate(
       expression.expression?.value ?: "",
       questionnaireResponse,
       variables,
-    ) as List<Any>
+    )
   }
 
   /**
@@ -375,9 +375,9 @@ internal class ExpressionEvaluator(
       .findAll(expression.expression?.value.toString())
       .map { it.groupValues }
       .map { (fhirPathWithParentheses, fhirPath) ->
-        val resourceType = extractResourceTypeFromPath(fhirPath)
+        val resourceType = FhirPathService.extractResourceTypeFromPath(fhirPath)
         val evaluatedResult =
-          evaluateFhirPathToString(
+          FhirPathService.evaluateFhirPathToString(
             expression = fhirPath,
             resource = launchContextMap[resourceType],
           )
@@ -504,8 +504,7 @@ internal class ExpressionEvaluator(
           }
           .build()
       } else if (expression.isFhirPath) {
-        r4FhirPathEngine
-          .evaluateExpression(
+        FhirPathService.evaluate(
             expression.expression?.value ?: "",
             questionnaireResponse,
             variables = dependentVariables,
