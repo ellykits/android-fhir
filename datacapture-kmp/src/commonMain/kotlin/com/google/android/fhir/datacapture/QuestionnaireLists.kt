@@ -196,11 +196,16 @@ private fun QuestionnaireReviewItem(
     modifier = modifier.padding(horizontal = 16.dp, vertical = 16.dp),
   ) {
     // Header section with prefix, question, and hint
-    val prefixText = remember(questionnaireViewItem.questionnaireItem.prefix) {
-      questionnaireViewItem.questionnaireItem.localizedPrefixAnnotatedString ?: ""
-    }
-    val viewItemQuestionText = remember(questionnaireViewItem) { questionnaireViewItem.questionText ?: "" }
-    val hintText = remember(questionnaireViewItem) { questionnaireViewItem.enabledDisplayItems.getLocalizedInstructionsAnnotatedString() }
+    val prefixText =
+      remember(questionnaireViewItem.questionnaireItem.prefix) {
+        questionnaireViewItem.questionnaireItem.localizedPrefixAnnotatedString ?: ""
+      }
+    val viewItemQuestionText =
+      remember(questionnaireViewItem) { questionnaireViewItem.questionText ?: "" }
+    val hintText =
+      remember(questionnaireViewItem) {
+        questionnaireViewItem.enabledDisplayItems.getLocalizedInstructionsAnnotatedString()
+      }
 
     if (prefixText.isNotBlank() || viewItemQuestionText.isNotBlank() || hintText.isNotBlank()) {
       Column {
@@ -222,7 +227,7 @@ private fun QuestionnaireReviewItem(
         }
 
         // Hint/instructions
-        if (hintText.isNotBlank()){
+        if (hintText.isNotBlank()) {
           Text(
             text = hintText,
             style = QuestionnaireTheme.typography.bodyMedium,
@@ -233,9 +238,11 @@ private fun QuestionnaireReviewItem(
       }
     }
 
-    val flyOverText = remember(questionnaireViewItem) {
-      questionnaireViewItem.enabledDisplayItems.localizedFlyoverAnnotatedString ?: AnnotatedString("")
-    }
+    val flyOverText =
+      remember(questionnaireViewItem) {
+        questionnaireViewItem.enabledDisplayItems.localizedFlyoverAnnotatedString
+          ?: AnnotatedString("")
+      }
 
     // Flyover text
     if (flyOverText.isNotBlank()) {
@@ -271,10 +278,7 @@ private fun QuestionnaireReviewItem(
         }
 
         // Error display
-        if (
-          questionnaireViewItem.validationResult
-            is Invalid
-        ) {
+        if (questionnaireViewItem.validationResult is Invalid) {
           Row(
             modifier = Modifier.padding(top = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -296,10 +300,24 @@ private fun QuestionnaireReviewItem(
     }
 
     // Divider
-    val showDivider = remember(prefixText, viewItemQuestionText, hintText, flyOverText, questionnaireViewItem.questionnaireItem.type) {
-      prefixText.isNotBlank() || viewItemQuestionText.isNotBlank() || hintText.isNotBlank() || flyOverText.isNotBlank() || questionnaireViewItem.questionnaireItem.type.value !in arrayOf(Questionnaire.QuestionnaireItemType.Group,
-        Questionnaire.QuestionnaireItemType.Display,)
-    }
+    val showDivider =
+      remember(
+        prefixText,
+        viewItemQuestionText,
+        hintText,
+        flyOverText,
+        questionnaireViewItem.questionnaireItem.type,
+      ) {
+        prefixText.isNotBlank() ||
+          viewItemQuestionText.isNotBlank() ||
+          hintText.isNotBlank() ||
+          flyOverText.isNotBlank() ||
+          questionnaireViewItem.questionnaireItem.type.value !in
+            arrayOf(
+              Questionnaire.QuestionnaireItemType.Group,
+              Questionnaire.QuestionnaireItemType.Display,
+            )
+      }
 
     if (showDivider) {
       HorizontalDivider(

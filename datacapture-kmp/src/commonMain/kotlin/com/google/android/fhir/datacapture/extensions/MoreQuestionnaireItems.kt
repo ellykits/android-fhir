@@ -942,7 +942,8 @@ private fun Questionnaire.Item.createQuestionnaireResponseItemAnswers():
   if (
     answerOption.initialSelected.isEmpty() &&
       (initial.isEmpty() ||
-        (initialFirstRep?.value?.asQuantity() != null && initialFirstRep.value.asQuantity()?.value?.value == null))
+        (initialFirstRep?.value?.asQuantity() != null &&
+          initialFirstRep.value.asQuantity()?.value?.value == null))
   ) {
     return mutableListOf()
   }

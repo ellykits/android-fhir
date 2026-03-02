@@ -28,7 +28,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -234,10 +233,7 @@ internal fun Help(
           isCardOpen = !isCardOpen
           helpButtonOnClick(isCardOpen)
         },
-        modifier =
-          Modifier.padding(2.dp)
-            .padding(start = 4.dp)
-            .testTag(HELP_BUTTON_TAG)
+        modifier = Modifier.padding(2.dp).padding(start = 4.dp).testTag(HELP_BUTTON_TAG),
       ) {
         Icon(
           painterResource(Res.drawable.ic_help),
