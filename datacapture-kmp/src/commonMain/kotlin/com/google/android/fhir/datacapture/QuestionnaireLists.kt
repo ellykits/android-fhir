@@ -33,17 +33,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.android.fhir.datacapture.extensions.displayString
 import com.google.android.fhir.datacapture.extensions.elementValue
+import com.google.android.fhir.datacapture.extensions.getLocalizedInstructionsAnnotatedString
 import com.google.android.fhir.datacapture.extensions.itemControl
+import com.google.android.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
+import com.google.android.fhir.datacapture.extensions.localizedPrefixAnnotatedString
 import com.google.android.fhir.datacapture.extensions.shouldUseDialog
 import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
+import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.views.QuestionnaireViewItem
 import com.google.android.fhir.datacapture.views.components.QuestionnaireBottomNavigation
 import com.google.android.fhir.datacapture.views.components.RepeatedGroupAddButtonItem
@@ -189,25 +196,22 @@ private fun QuestionnaireReviewItem(
     modifier = modifier.padding(horizontal = 16.dp, vertical = 16.dp),
   ) {
     // Header section with prefix, question, and hint
-    val hasPrefix = questionnaireViewItem.questionnaireItem.prefix?.value?.isNotEmpty() == true
-    val hasQuestion = questionnaireViewItem.questionText?.isNotEmpty() == true
-    val hasHint =
-      questionnaireViewItem.enabledDisplayItems.any { it.text?.value?.isNotEmpty() == true }
+    val prefixText = remember(questionnaireViewItem.questionnaireItem.prefix) {
+      questionnaireViewItem.questionnaireItem.localizedPrefixAnnotatedString ?: ""
+    }
+    val viewItemQuestionText = remember(questionnaireViewItem) { questionnaireViewItem.questionText ?: "" }
+    val hintText = remember(questionnaireViewItem) { questionnaireViewItem.enabledDisplayItems.getLocalizedInstructionsAnnotatedString() }
 
-    if (hasPrefix || hasQuestion || hasHint) {
+    if (prefixText.isNotBlank() || viewItemQuestionText.isNotBlank() || hintText.isNotBlank()) {
       Column {
         // Question with optional prefix
-        if (hasPrefix || hasQuestion) {
-          val questionText = buildString {
-            if (hasPrefix) {
-              append(questionnaireViewItem.questionnaireItem.prefix ?: "")
-              if (hasQuestion) append(" ")
-            }
-            if (hasQuestion) {
-              append(questionnaireViewItem.questionText?.toString() ?: "")
-            }
-          }
+        val questionText = buildAnnotatedString {
+          append(prefixText)
+          if (viewItemQuestionText.isNotBlank()) append(" ")
+          append(viewItemQuestionText)
+        }
 
+        if (questionText.isNotBlank()) {
           Text(
             text = questionText,
             style = QuestionnaireTheme.typography.titleMedium,
@@ -217,40 +221,30 @@ private fun QuestionnaireReviewItem(
           )
         }
 
-        // Hint/instructions. Should we show the hint instructions?
-        /*if (hasHint) {
-          questionnaireViewItem.enabledDisplayItems.forEach { displayItem ->
-            displayItem.text?.let { hintText ->
-              if (hintText.isNotEmpty()) {
-                Text(
-                  text = hintText,
-                  style = QuestionnaireTheme.typography.bodyMedium,
-                  color = QuestionnaireTheme.colorScheme.onSurfaceVariant,
-                  modifier = Modifier.padding(bottom = 8.dp),
-                )
-              }
-            }
-          }
-        }*/
+        // Hint/instructions
+        if (hintText.isNotBlank()){
+          Text(
+            text = hintText,
+            style = QuestionnaireTheme.typography.bodyMedium,
+            color = QuestionnaireTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 8.dp),
+          )
+        }
       }
     }
 
+    val flyOverText = remember(questionnaireViewItem) {
+      questionnaireViewItem.enabledDisplayItems.localizedFlyoverAnnotatedString ?: AnnotatedString("")
+    }
+
     // Flyover text
-    questionnaireViewItem.enabledDisplayItems.forEach { displayItem ->
-      displayItem.extension.forEach { ext ->
-        if (ext.url == "http://hl7.org/fhir/StructureDefinition/questionnaire-displayCategory") {
-          ext.value?.asString()?.value?.value?.let { flyoverText ->
-            if (flyoverText.isNotEmpty()) {
-              Text(
-                text = flyoverText,
-                style = QuestionnaireTheme.typography.bodyMedium,
-                color = QuestionnaireTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp),
-              )
-            }
-          }
-        }
-      }
+    if (flyOverText.isNotBlank()) {
+      Text(
+        text = flyOverText,
+        style = QuestionnaireTheme.typography.bodyMedium,
+        color = QuestionnaireTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(top = 8.dp),
+      )
     }
 
     // Answer section (only for non-group, non-display items)
@@ -267,7 +261,7 @@ private fun QuestionnaireReviewItem(
             .joinToString()
             .ifBlank { notAnsweredTextString }
 
-        if (answerText.isNotEmpty()) {
+        if (answerText.isNotBlank()) {
           Text(
             text = answerText,
             style = QuestionnaireTheme.typography.bodyLarge,
@@ -279,7 +273,7 @@ private fun QuestionnaireReviewItem(
         // Error display
         if (
           questionnaireViewItem.validationResult
-            is com.google.android.fhir.datacapture.validation.Invalid
+            is Invalid
         ) {
           Row(
             modifier = Modifier.padding(top = 8.dp),
@@ -302,11 +296,18 @@ private fun QuestionnaireReviewItem(
     }
 
     // Divider
-    HorizontalDivider(
-      modifier = Modifier.padding(top = 16.dp),
-      color = QuestionnaireTheme.colorScheme.outlineVariant,
-      thickness = 0.5.dp,
-    )
+    val showDivider = remember(prefixText, viewItemQuestionText, hintText, flyOverText, questionnaireViewItem.questionnaireItem.type) {
+      prefixText.isNotBlank() || viewItemQuestionText.isNotBlank() || hintText.isNotBlank() || flyOverText.isNotBlank() || questionnaireViewItem.questionnaireItem.type.value !in arrayOf(Questionnaire.QuestionnaireItemType.Group,
+        Questionnaire.QuestionnaireItemType.Display,)
+    }
+
+    if (showDivider) {
+      HorizontalDivider(
+        modifier = Modifier.padding(top = 16.dp),
+        color = QuestionnaireTheme.colorScheme.outlineVariant,
+        thickness = 0.5.dp,
+      )
+    }
   }
 }
 

@@ -373,22 +373,6 @@ fun List<Questionnaire.Item>.getLocalizedInstructionsAnnotatedString(
     .joinTo(this, separator) { it.localizedTextAnnotatedString.toString() }
 }
 
-/**
- * A nested questionnaire item of type display with code [DisplayItemControlType.FLYOVER] (if
- * present) is used as the fly-over text of the parent question.
- */
-internal val Questionnaire.Item.localizedFlyoverSpanned: AnnotatedString?
-  get() = item.localizedFlyoverSpanned
-
-/** [localizedFlyoverSpanned] over list of [Questionnaire.Item] */
-val List<Questionnaire.Item>.localizedFlyoverSpanned: AnnotatedString?
-  get() =
-    this.firstOrNull { questionnaireItem ->
-        questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Display &&
-          questionnaireItem.displayItemControl == DisplayItemControlType.FLYOVER
-      }
-      ?.localizedTextAnnotatedString
-
 val List<Questionnaire.Item>.localizedFlyoverAnnotatedString: AnnotatedString?
   get() =
     this.firstOrNull { questionnaireItem ->
