@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,6 +55,7 @@ import com.google.android.fhir.catalog.ui.questionnaire.QuestionnaireResponseScr
 import com.google.android.fhir.catalog.ui.questionnaire.QuestionnaireScreen
 import com.google.android.fhir.catalog.ui.questionnaire.QuestionnaireViewModel
 import com.google.android.fhir.catalog.ui.theme.AppTheme
+import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.painterResource
 
 sealed class Screen(val route: String, val label: String, val icon: @Composable () -> Unit) {
@@ -84,6 +86,7 @@ fun App() {
   AppTheme {
     Surface {
       val navController: NavHostController = rememberNavController()
+      val scope: CoroutineScope = rememberCoroutineScope()
       val componentViewModel: ComponentListViewModel = viewModel { ComponentListViewModel() }
       val layoutViewModel: LayoutListViewModel = viewModel { LayoutListViewModel() }
       val behaviorViewModel: BehaviorListViewModel = viewModel { BehaviorListViewModel() }
@@ -197,6 +200,7 @@ fun App() {
               showReviewPage = review,
               showReviewPageFirst = reviewFirst,
               isReadOnly = readOnly,
+              coroutineScope = scope,
               onBackClick = { navController.popBackStack() },
               navigateToResponse = { responseJson ->
                 submittedResponseJson = responseJson

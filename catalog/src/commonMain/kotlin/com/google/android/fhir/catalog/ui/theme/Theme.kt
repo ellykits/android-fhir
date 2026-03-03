@@ -17,10 +17,10 @@
 package com.google.android.fhir.catalog.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
 
 private val DarkColorScheme =
   darkColorScheme(
@@ -83,7 +83,7 @@ fun AppTheme(
 ) {
   val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
-  MaterialTheme(
+  QuestionnaireTheme(
     colorScheme = colorScheme,
     content = content,
   )

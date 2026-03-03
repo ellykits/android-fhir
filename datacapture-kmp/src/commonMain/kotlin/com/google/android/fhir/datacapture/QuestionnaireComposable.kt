@@ -16,11 +16,25 @@
 
 package com.google.android.fhir.datacapture
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.fhir.datacapture.extensions.flattened
+import com.google.android.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
+import com.google.android.fhir.datacapture.extensions.localizedPrefixAnnotatedString
+import com.google.android.fhir.datacapture.extensions.localizedTextAnnotatedString
+import com.google.android.fhir.datacapture.validation.Invalid
+import com.google.android.fhir.datacapture.views.components.ValidationErrorDialog
 import com.google.fhir.model.r4.QuestionnaireResponse
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Public composable function for displaying a FHIR Questionnaire in KMP applications.
@@ -73,6 +87,7 @@ fun Questionnaire(
   showOptionalText: Boolean = false,
   showNavigationLongScroll: Boolean = false,
   submitButtonText: String? = null,
+  showSubmitAnywayWhenValidationFails: Boolean = true,
   matchersProvider: QuestionnaireItemViewHolderFactoryMatchersProvider? = null,
   onSubmit: (suspend () -> QuestionnaireResponse) -> Unit,
   onCancel: () -> Unit,
@@ -92,6 +107,7 @@ fun Questionnaire(
       showOptionalText,
       showNavigationLongScroll,
       submitButtonText,
+      showSubmitAnywayWhenValidationFails,
     ) {
       buildMap<String, Any> {
         put(EXTRA_QUESTIONNAIRE_JSON_STRING, questionnaireJson)
@@ -108,25 +124,68 @@ fun Questionnaire(
         put(EXTRA_SHOW_REVIEW_PAGE_FIRST, showReviewPageFirst)
         put(EXTRA_SHOW_NAVIGATION_IN_DEFAULT_LONG_SCROLL, showNavigationLongScroll)
         submitButtonText?.let { put(EXTRA_SUBMIT_BUTTON_TEXT, it) }
+        put(EXTRA_SHOW_SUBMIT_ANYWAY_BUTTON, showSubmitAnywayWhenValidationFails)
       }
+    }
+  val effectiveMatchersProvider =
+    remember(matchersProvider) {
+      matchersProvider ?: EmptyQuestionnaireItemViewHolderFactoryMatchersProvider
     }
 
   val viewModel: QuestionnaireViewModel =
     viewModel(key = questionnaireJson) { QuestionnaireViewModel(stateMap) }
 
-  LaunchedEffect(viewModel, onSubmit, onCancel) {
-    viewModel.setOnSubmitButtonClickListener { onSubmit { viewModel.getQuestionnaireResponse() } }
+  var showValidationDialog by remember { mutableStateOf(false) }
+  var invalidFields by remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
 
-    viewModel.setOnCancelButtonClickListener { onCancel() }
+  LaunchedEffect(onSubmit) {
+    viewModel.setOnSubmitButtonClickListener {
+      onSubmit {
+        val validationResults = viewModel.validateQuestionnaireAndUpdateUI()
+        val validationResultHasInvalid = validationResults.values.flatten().any { it is Invalid }
+
+        if (validationResultHasInvalid) {
+          val map =
+            validationResults.filterValues { it.any { validation -> validation is Invalid } }
+          invalidFields =
+            viewModel.questionnaire.item
+              .flattened()
+              .filter { it.linkId.value!! in map }
+              .mapNotNull {
+                it.localizedTextAnnotatedString?.takeIfNotBlank()
+                  ?: it.item.localizedFlyoverAnnotatedString ?: it.localizedPrefixAnnotatedString
+              }
+
+          showValidationDialog = true
+          throw CancellationException()
+        } else {
+          return@onSubmit viewModel.getQuestionnaireResponse()
+        }
+      }
+    }
   }
 
-  val effectiveMatchersProvider =
-    matchersProvider ?: EmptyQuestionnaireItemViewHolderFactoryMatchersProvider
+  LaunchedEffect(onCancel) { viewModel.setOnCancelButtonClickListener { onCancel() } }
 
-  QuestionnaireScreen(
-    viewModel = viewModel,
-    matchersProvider = effectiveMatchersProvider,
-  )
+  Box(modifier = Modifier.fillMaxSize()) {
+    QuestionnaireScreen(
+      viewModel = viewModel,
+      matchersProvider = effectiveMatchersProvider,
+    )
+
+    if (showValidationDialog) {
+      ValidationErrorDialog(
+        invalidFields = invalidFields,
+        onDismiss = { showValidationDialog = false },
+        onFixQuestions = { showValidationDialog = false },
+        showSubmitAnyway = showSubmitAnywayWhenValidationFails,
+        onSubmitAnyway = {
+          showValidationDialog = false
+          onSubmit { viewModel.getQuestionnaireResponse() }
+        },
+      )
+    }
+  }
 }
 
 /**
@@ -137,3 +196,5 @@ private object EmptyQuestionnaireItemViewHolderFactoryMatchersProvider :
   QuestionnaireItemViewHolderFactoryMatchersProvider() {
   override fun get() = emptyList<QuestionnaireItemViewHolderFactoryMatcher>()
 }
+
+private fun AnnotatedString.takeIfNotBlank(): AnnotatedString? = takeIf { it.isNotBlank() }

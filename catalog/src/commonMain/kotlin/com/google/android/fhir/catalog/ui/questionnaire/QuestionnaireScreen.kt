@@ -49,7 +49,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,9 +56,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.android.fhir.catalog.ui.questionnaire.components.ErrorStateToggleAction
-import com.google.android.fhir.catalog.ui.questionnaire.components.ValidationErrorDialog
 import com.google.android.fhir.datacapture.Questionnaire
-import com.google.fhir.model.r4.QuestionnaireResponse
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -70,6 +68,7 @@ fun QuestionnaireScreen(
   viewModel: QuestionnaireViewModel,
   title: String,
   fileName: String,
+  coroutineScope: CoroutineScope,
   validationFileName: String? = null,
   showReviewPage: Boolean = false,
   showReviewPageFirst: Boolean = false,
@@ -79,7 +78,6 @@ fun QuestionnaireScreen(
 ) {
   var isErrorState by remember { mutableStateOf(false) }
   var questionnaireJson by remember { mutableStateOf<String?>(null) }
-  val scope = rememberCoroutineScope()
 
   val skipLogicTitle = stringResource(Res.string.behavior_name_skip_logic)
   val calculatedExpressionTitle = stringResource(Res.string.behavior_name_calculated_expression)
@@ -136,25 +134,6 @@ fun QuestionnaireScreen(
         }
 
         Box(modifier = Modifier.weight(1f)) {
-          var showValidationDialog by remember { mutableStateOf(false) }
-          var invalidFields by remember { mutableStateOf<List<String>>(emptyList()) }
-          var pendingResponse by remember { mutableStateOf<QuestionnaireResponse?>(null) }
-
-          if (showValidationDialog) {
-            ValidationErrorDialog(
-              invalidFields = invalidFields,
-              onDismiss = { showValidationDialog = false },
-              onFixQuestions = { showValidationDialog = false },
-              onSubmitAnyway = {
-                showValidationDialog = false
-                pendingResponse?.let {
-                  val responseJson = viewModel.getQuestionnaireResponseJson(it)
-                  navigateToResponse(responseJson)
-                }
-              },
-            )
-          }
-
           questionnaireJson?.let { json ->
             Questionnaire(
               questionnaireJson = json,
@@ -167,18 +146,10 @@ fun QuestionnaireScreen(
               showRequiredText = isErrorState,
               showOptionalText = isErrorState,
               onSubmit = { getResponse ->
-                scope.launch {
+                coroutineScope.launch {
                   val response = getResponse()
-                  val errors = viewModel.validateAndGetErrors(json, response)
-
-                  if (errors.isNotEmpty()) {
-                    invalidFields = errors
-                    pendingResponse = response
-                    showValidationDialog = true
-                  } else {
-                    val responseJson = viewModel.getQuestionnaireResponseJson(response)
-                    navigateToResponse(responseJson)
-                  }
+                  val responseJson = viewModel.getQuestionnaireResponseJson(response)
+                  navigateToResponse(responseJson)
                 }
               },
               onCancel = {},

@@ -102,9 +102,7 @@ kotlin {
       }
     }
 
-    androidMain {
-      resources.srcDir("res")
-    }
+    androidMain { resources.srcDir("res") }
 
     val desktopMain by getting {
       dependencies {
