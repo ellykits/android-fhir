@@ -19,7 +19,7 @@ package com.google.android.fhir.datacapture.extensions
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import com.google.android.fhir.datacapture.QuestionnaireViewHolderType
-import com.google.android.fhir.datacapture.fhirpath.evaluateToDisplay
+import com.google.android.fhir.datacapture.fhirpath.FhirPathService
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Coding
 import com.google.fhir.model.r4.Date
@@ -744,7 +744,7 @@ internal fun Questionnaire.Item.extractAnswerOptions(
             this@extractAnswerOptions.choiceColumn
               .filter { it.forDisplay }
               .map { it.path }
-              .let { evaluateToDisplay(it, data) }
+              .let { FhirPathService.evaluateToDisplay(it, data) }
               .also { display = FhirString.Builder().apply { value = it } }
           }
           .build()

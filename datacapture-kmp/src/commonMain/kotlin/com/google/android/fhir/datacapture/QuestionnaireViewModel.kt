@@ -53,7 +53,7 @@ import com.google.android.fhir.datacapture.extensions.unpackRepeatedGroups
 import com.google.android.fhir.datacapture.extensions.validateLaunchContextExtensions
 import com.google.android.fhir.datacapture.extensions.zipByLinkId
 import com.google.android.fhir.datacapture.fhirpath.ExpressionEvaluator
-import com.google.android.fhir.datacapture.fhirpath.convertToString
+import com.google.android.fhir.datacapture.fhirpath.FhirPathService
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.NotValidated
 import com.google.android.fhir.datacapture.validation.QuestionnaireResponseItemValidator
@@ -1033,7 +1033,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
           )
         }
         ?.takeIf { it.isNotEmpty() }
-        ?.let { convertToString(it) }
+        ?.let { FhirPathService.convertToString(it) }
     val evaluatedQuestionnaireResponseItem =
       cqfDynamicQuestionnaireText?.let {
         questionnaireResponseItem.copy(text = FhirR4String(value = it))
