@@ -205,7 +205,7 @@ class MaxValueValidatorTest {
                                         Enumeration(
                                           value = Expression.ExpressionLanguage.Text_Fhirpath,
                                         ),
-                                      expression = FhirR4String(value = "today() - 7 'days'"),
+                                      expression = FhirR4String(value = "today() - 7 days"),
                                     ),
                                 ),
                             ),
@@ -242,7 +242,7 @@ class MaxValueValidatorTest {
 
       assertFalse(validationResult.isValid)
       assertEquals(
-        "Maximum value allowed is:${today.minus(DatePeriod(days = 7))}",
+        "Maximum value allowed is:${today.minus(DatePeriod(days = 7))} ",
         validationResult.errorMessage,
       )
     }
@@ -281,7 +281,7 @@ class MaxValueValidatorTest {
                                         Enumeration(
                                           value = Expression.ExpressionLanguage.Text_Fhirpath,
                                         ),
-                                      expression = FhirR4String(value = "today() - 7 'days'"),
+                                      expression = FhirR4String(value = "today() - 7 days"),
                                     ),
                                 ),
                             ),
@@ -318,7 +318,7 @@ class MaxValueValidatorTest {
 
       assertFalse(validationResult.isValid)
       assertEquals(
-        "Maximum value allowed is:${today.minus(DatePeriod(days = 7))}",
+        "Maximum value allowed is:${today.minus(DatePeriod(days = 7))} ",
         validationResult.errorMessage,
       )
     }

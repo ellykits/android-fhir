@@ -140,9 +140,6 @@ fun Questionnaire(
 
   LaunchedEffect(onSubmit) {
     viewModel.setOnSubmitButtonClickListener {
-      // Validate QuestionnaireResponseAndUi by calling viewModel.validateQuestionnaireAndUpdateUI()
-      // If valid, proceed to submit
-      // else show validation error dialog
       onSubmit {
         val validationResults = viewModel.validateQuestionnaireAndUpdateUI()
         val validationResultHasInvalid = validationResults.values.flatten().any { it is Invalid }
@@ -150,8 +147,6 @@ fun Questionnaire(
         if (validationResultHasInvalid) {
           val map =
             validationResults.filterValues { it.any { validation -> validation is Invalid } }
-          println(validationResults)
-          println(map)
           invalidFields =
             viewModel.questionnaire.item
               .flattened()

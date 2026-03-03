@@ -22,9 +22,9 @@ import com.google.fhir.model.r4.Resource
 
 object TestExpressionEvaluator {
   fun evaluateExpression(expression: Expression, resource: Resource): Any? =
-    //    try {
-    r4FhirPathEngine.evaluateExpression(expression.expression?.value!!, resource).singleOrNull()
-  //    } catch (_: Exception) {
-  //      null
-  //    }
+    try {
+      r4FhirPathEngine.evaluateExpression(expression.expression?.value!!, resource).singleOrNull()
+    } catch (_: Exception) {
+      null
+    }
 }

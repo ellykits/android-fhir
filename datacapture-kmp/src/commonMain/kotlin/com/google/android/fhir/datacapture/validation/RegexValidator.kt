@@ -21,7 +21,6 @@ import android_fhir.datacapture_kmp.generated.resources.regex_validation_error_m
 import co.touchlab.kermit.Logger
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.QuestionnaireResponse
-import com.google.fhir.model.r4.String
 import org.jetbrains.compose.resources.getString
 
 internal const val REGEX_EXTENSION_URL = "http://hl7.org/fhir/StructureDefinition/regex"
@@ -37,7 +36,7 @@ internal object RegexValidator :
     url = REGEX_EXTENSION_URL,
     predicate =
       predicate@{ constraintValue: Extension.Value, answer: QuestionnaireResponse.Item.Answer ->
-        val regex = constraintValue.asKotlinString()
+        val regex = constraintValue.asString()?.value?.value
         if (regex == null || answer.value == null) {
           return@predicate false
         }
@@ -50,8 +49,9 @@ internal object RegexValidator :
         }
       },
     messageGenerator = { constraintValue: Extension.Value ->
-      getString(Res.string.regex_validation_error_msg, constraintValue.asKotlinString().toString())
+      getString(
+        Res.string.regex_validation_error_msg,
+        constraintValue.asString()?.value?.value.toString(),
+      )
     },
   )
-
-private fun Extension.Value.asKotlinString(): kotlin.String? = asString()?.value?.value

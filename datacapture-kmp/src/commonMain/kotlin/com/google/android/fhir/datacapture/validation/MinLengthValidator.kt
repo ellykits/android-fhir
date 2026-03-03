@@ -39,7 +39,7 @@ internal object MinLengthValidator :
   AnswerExtensionConstraintValidator(
     url = MIN_LENGTH_EXTENSION_URL,
     predicate = { constraintValue, answer ->
-      val minLengthValue = constraintValue.asKotlinInt()
+      val minLengthValue = constraintValue.asInteger()?.value?.value
       answer.value != null &&
         minLengthValue != null &&
         (answer.value!!.asString()?.value?.value ?: "").length < minLengthValue
@@ -47,9 +47,7 @@ internal object MinLengthValidator :
     messageGenerator = { constraintValue: Extension.Value ->
       getString(
         Res.string.min_length_validation_error_msg,
-        constraintValue.asKotlinInt().toString(),
+        constraintValue.asInteger()?.value?.value.toString(),
       )
     },
   )
-
-private fun Extension.Value.asKotlinInt(): Int? = asInteger()?.value?.value
