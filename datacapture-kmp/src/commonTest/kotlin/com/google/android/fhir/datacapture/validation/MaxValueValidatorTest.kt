@@ -19,6 +19,7 @@ package com.google.android.fhir.datacapture.validation
 import com.google.android.fhir.datacapture.extensions.EXTENSION_CQF_CALCULATED_VALUE_URL
 import com.google.android.fhir.datacapture.extensions.FhirR4DateType
 import com.google.android.fhir.datacapture.extensions.FhirR4String
+import com.google.android.fhir.datacapture.fhirpath.FhirPathService
 import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.Expression
 import com.google.fhir.model.r4.Extension
@@ -232,12 +233,13 @@ class MaxValueValidatorTest {
 
       val validationResult =
         MaxValueValidator.validate(questionnaireItem, answer) {
-          TestExpressionEvaluator.evaluateExpression(
-            it,
-            QuestionnaireResponse(
-              status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
-            ),
-          )
+          FhirPathService.evaluate(
+              it.expression?.value!!,
+              QuestionnaireResponse(
+                status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
+              ),
+            )
+            .singleOrNull()
         }
 
       assertFalse(validationResult.isValid)
@@ -308,12 +310,13 @@ class MaxValueValidatorTest {
 
       val validationResult =
         MaxValueValidator.validate(questionnaireItem, answer) {
-          TestExpressionEvaluator.evaluateExpression(
-            it,
-            QuestionnaireResponse(
-              status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
-            ),
-          )
+          FhirPathService.evaluate(
+              it.expression?.value!!,
+              QuestionnaireResponse(
+                status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
+              ),
+            )
+            .singleOrNull()
         }
 
       assertFalse(validationResult.isValid)
@@ -386,12 +389,13 @@ class MaxValueValidatorTest {
           questionnaireItem,
           answer,
         ) {
-          TestExpressionEvaluator.evaluateExpression(
-            it,
-            QuestionnaireResponse(
-              status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
-            ),
-          )
+          FhirPathService.evaluate(
+              it.expression?.value!!,
+              QuestionnaireResponse(
+                status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
+              ),
+            )
+            .singleOrNull()
         }
 
       assertTrue(validationResult.isValid)
@@ -457,12 +461,13 @@ class MaxValueValidatorTest {
         questionnaireItem,
         answer,
       ) {
-        TestExpressionEvaluator.evaluateExpression(
-          it,
-          QuestionnaireResponse(
-            status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
-          ),
-        )
+        FhirPathService.evaluate(
+            it.expression?.value!!,
+            QuestionnaireResponse(
+              status = Enumeration(value = QuestionnaireResponseStatus.In_Progress),
+            ),
+          )
+          .singleOrNull()
       }
 
     assertTrue(validationResult.isValid)
