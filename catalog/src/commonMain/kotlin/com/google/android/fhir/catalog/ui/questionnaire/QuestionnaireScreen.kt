@@ -143,8 +143,6 @@ fun QuestionnaireScreen(
               showReviewPageFirst = showReviewPageFirst,
               isReadOnly = isReadOnly,
               showCancelButton = false,
-              showRequiredText = isErrorState,
-              showOptionalText = isErrorState,
               onSubmit = { getResponse ->
                 coroutineScope.launch {
                   val response = getResponse()

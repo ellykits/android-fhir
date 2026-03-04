@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,10 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.fhir.datacapture.extensions.flattened
-import com.google.android.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
-import com.google.android.fhir.datacapture.extensions.localizedPrefixAnnotatedString
-import com.google.android.fhir.datacapture.extensions.localizedTextAnnotatedString
-import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.views.components.ValidationErrorDialog
 import com.google.fhir.model.r4.QuestionnaireResponse
 import kotlin.coroutines.cancellation.CancellationException
@@ -49,8 +46,10 @@ import kotlin.coroutines.cancellation.CancellationException
  * @param isReadOnly Whether the questionnaire is read-only (default: false)
  * @param showAsterisk Whether to show asterisk for required fields (default: true)
  * @param showRequiredText Whether to show "required" text (default: false)
+ * @param showNavigationLongScroll: Boolean = false,
  * @param showOptionalText Whether to show "optional" text (default: false)
  * @param submitButtonText Custom text for submit button (optional)
+ * @param showSubmitAnywayWhenValidationFails: Boolean = true,
  * @param matchersProvider Custom matchers provider for custom question types (optional)
  * @param onSubmit Callback invoked when user submits the questionnaire with the response
  * @param onCancel Callback invoked when user cancels the questionnaire
@@ -134,33 +133,30 @@ fun Questionnaire(
 
   val viewModel: QuestionnaireViewModel =
     viewModel(key = questionnaireJson) { QuestionnaireViewModel(stateMap) }
+  val flattenedQuestionnaireItems =
+    remember(viewModel.questionnaire) { viewModel.questionnaire.item.flattened() }
+  val submitClicked: Int by viewModel.submissionCount.collectAsState()
 
   var showValidationDialog by remember { mutableStateOf(false) }
   var invalidFields by remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
 
-  LaunchedEffect(onSubmit) {
-    viewModel.setOnSubmitButtonClickListener {
-      onSubmit {
-        val validationResults = viewModel.validateQuestionnaireAndUpdateUI()
-        val validationResultHasInvalid = validationResults.values.flatten().any { it is Invalid }
+  var submitClickIsOnFirstLaunchComposition by remember { mutableStateOf(true) }
 
-        if (validationResultHasInvalid) {
-          val map =
-            validationResults.filterValues { it.any { validation -> validation is Invalid } }
-          invalidFields =
-            viewModel.questionnaire.item
-              .flattened()
-              .filter { it.linkId.value!! in map }
-              .mapNotNull {
-                it.localizedTextAnnotatedString?.takeIfNotBlank()
-                  ?: it.item.localizedFlyoverAnnotatedString ?: it.localizedPrefixAnnotatedString
-              }
+  LaunchedEffect(submitClicked) {
+    if (submitClickIsOnFirstLaunchComposition) {
+      submitClickIsOnFirstLaunchComposition = false
+      return@LaunchedEffect
+    }
 
-          showValidationDialog = true
-          throw CancellationException()
-        } else {
-          return@onSubmit viewModel.getQuestionnaireResponse()
-        }
+    onSubmit {
+      val invalidValidationLinkIds =
+        viewModel.validateQuestionnaireUpdateUIAndGetErrorFields(flattenedQuestionnaireItems)
+      if (invalidValidationLinkIds.isNotEmpty()) {
+        invalidFields = invalidValidationLinkIds
+        showValidationDialog = true
+        throw CancellationException()
+      } else {
+        return@onSubmit viewModel.getQuestionnaireResponse()
       }
     }
   }
@@ -196,5 +192,3 @@ private object EmptyQuestionnaireItemViewHolderFactoryMatchersProvider :
   QuestionnaireItemViewHolderFactoryMatchersProvider() {
   override fun get() = emptyList<QuestionnaireItemViewHolderFactoryMatcher>()
 }
-
-private fun AnnotatedString.takeIfNotBlank(): AnnotatedString? = takeIf { it.isNotBlank() }
