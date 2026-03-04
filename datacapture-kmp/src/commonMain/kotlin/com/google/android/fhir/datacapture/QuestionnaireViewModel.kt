@@ -16,8 +16,6 @@
 
 package com.google.android.fhir.datacapture
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -63,6 +61,8 @@ import com.google.android.fhir.datacapture.validation.Valid
 import com.google.android.fhir.datacapture.validation.ValidationResult
 import com.google.android.fhir.datacapture.views.QuestionTextConfiguration
 import com.google.android.fhir.datacapture.views.QuestionnaireViewItem
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Canonical
 import com.google.fhir.model.r4.Coding

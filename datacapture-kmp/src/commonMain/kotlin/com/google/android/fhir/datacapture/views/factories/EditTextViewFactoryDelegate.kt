@@ -16,8 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.factories
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.required_text_and_new_line
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +38,8 @@ import com.google.android.fhir.datacapture.views.components.Header
 import com.google.android.fhir.datacapture.views.components.MediaItem
 import com.google.android.fhir.datacapture.views.components.UnitText
 import com.google.android.fhir.datacapture.views.components.getRequiredOrOptionalText
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.required_text_and_new_line
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 

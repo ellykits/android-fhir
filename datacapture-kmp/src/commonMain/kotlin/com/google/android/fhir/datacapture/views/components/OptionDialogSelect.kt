@@ -16,14 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.cancel
-import android_fhir.datacapture_kmp.generated.resources.delete
-import android_fhir.datacapture_kmp.generated.resources.delete_24px
-import android_fhir.datacapture_kmp.generated.resources.open_choice_other
-import android_fhir.datacapture_kmp.generated.resources.open_choice_other_add_another
-import android_fhir.datacapture_kmp.generated.resources.open_choice_other_hint
-import android_fhir.datacapture_kmp.generated.resources.save
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -63,6 +55,14 @@ import com.google.android.fhir.datacapture.extensions.itemAnswerOptionImage
 import com.google.android.fhir.datacapture.extensions.optionExclusive
 import com.google.android.fhir.datacapture.extensions.toAnnotatedString
 import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.cancel
+import com.google.fhir.datacapture_kmp.generated.resources.delete
+import com.google.fhir.datacapture_kmp.generated.resources.delete_24px
+import com.google.fhir.datacapture_kmp.generated.resources.open_choice_other
+import com.google.fhir.datacapture_kmp.generated.resources.open_choice_other_add_another
+import com.google.fhir.datacapture_kmp.generated.resources.open_choice_other_hint
+import com.google.fhir.datacapture_kmp.generated.resources.save
 import com.google.fhir.model.r4.Questionnaire
 import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi

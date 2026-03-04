@@ -10,7 +10,12 @@ plugins {
   id("org.jetbrains.compose.hot-reload")
   id("org.jetbrains.compose")
   alias(libs.plugins.ksp)
+  `maven-publish`
 }
+
+group = "com.google.fhir"
+
+version = "1.0.0-alpha01"
 
 kotlin {
   jvmToolchain(21)
@@ -41,7 +46,7 @@ kotlin {
     }
   }
 
-  val xcfName = "sharedKit"
+  val xcfName = "datacaptureKmp"
 
   iosX64 { binaries.framework { baseName = xcfName } }
 
@@ -113,4 +118,44 @@ kotlin {
 
     iosMain { dependencies {} }
   }
+}
+
+// publishing prep
+val localRepo: Directory = project.layout.buildDirectory.get().dir("repo")
+
+publishing {
+  repositories { maven { url = localRepo.asFile.toURI() } }
+  publications {
+    withType<MavenPublication> {
+      pom {
+        licenses {
+          license {
+            name.set("The Apache License, Version 2.0")
+            url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+          }
+        }
+      }
+    }
+  }
+}
+
+val deleteRepoTask =
+  tasks.register<Delete>("deleteLocalRepo") {
+    description =
+      "Deletes the local repository to get rid of stale artifacts before local publishing"
+    this.delete(localRepo)
+  }
+
+tasks.named("publishAllPublicationsToMavenRepository").configure { dependsOn(deleteRepoTask) }
+
+tasks.register("zipRepo", Zip::class) {
+  description = "Create a zip of the maven repository"
+  this.destinationDirectory.set(project.layout.buildDirectory.dir("repoZip"))
+  archiveBaseName.set("kotlin-data-capture")
+
+  // Hint to gradle that the repo files are produced by the publish task. This establishes a
+  // dependency from the zipRepo task to the publish task.
+  this.from(
+    tasks.named("publish").map { _ -> localRepo },
+  )
 }

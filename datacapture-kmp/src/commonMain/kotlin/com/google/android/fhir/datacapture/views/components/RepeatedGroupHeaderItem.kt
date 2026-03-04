@@ -16,10 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.delete
-import android_fhir.datacapture_kmp.generated.resources.delete_24px
-import android_fhir.datacapture_kmp.generated.resources.repeated_group_title
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +36,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.google.android.fhir.datacapture.QuestionnaireAdapterItem
 import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.delete
+import com.google.fhir.datacapture_kmp.generated.resources.delete_24px
+import com.google.fhir.datacapture_kmp.generated.resources.repeated_group_title
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource

@@ -16,8 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.ic_clear
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
@@ -51,6 +49,8 @@ import com.google.android.fhir.datacapture.extensions.elementValue
 import com.google.android.fhir.datacapture.extensions.itemAnswerOptionImage
 import com.google.android.fhir.datacapture.extensions.toAnnotatedString
 import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.ic_clear
 import com.google.fhir.model.r4.Element
 import com.google.fhir.model.r4.Questionnaire
 import org.jetbrains.compose.resources.painterResource

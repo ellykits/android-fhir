@@ -16,9 +16,6 @@
 
 package com.google.android.fhir.datacapture
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.edit_button_text
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_review_mode_title
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -48,6 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
 import com.google.android.fhir.datacapture.views.components.QuestionnaireBottomNavigation
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.edit_button_text
+import com.google.fhir.datacapture_kmp.generated.resources.questionnaire_review_mode_title
 import org.jetbrains.compose.resources.stringResource
 
 /**

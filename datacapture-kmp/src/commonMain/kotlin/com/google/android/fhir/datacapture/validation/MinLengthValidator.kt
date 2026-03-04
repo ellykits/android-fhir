@@ -16,8 +16,8 @@
 
 package com.google.android.fhir.datacapture.validation
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.min_length_validation_error_msg
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.min_length_validation_error_msg
 import com.google.fhir.model.r4.Extension
 import org.jetbrains.compose.resources.getString
 

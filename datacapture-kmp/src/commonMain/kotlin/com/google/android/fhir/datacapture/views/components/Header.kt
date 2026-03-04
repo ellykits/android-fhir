@@ -16,10 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.help
-import android_fhir.datacapture_kmp.generated.resources.ic_help
-import android_fhir.datacapture_kmp.generated.resources.space_asterisk
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -56,6 +52,10 @@ import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
 import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.validation.ValidationResult
 import com.google.android.fhir.datacapture.views.QuestionnaireViewItem
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.help
+import com.google.fhir.datacapture_kmp.generated.resources.ic_help
+import com.google.fhir.datacapture_kmp.generated.resources.space_asterisk
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

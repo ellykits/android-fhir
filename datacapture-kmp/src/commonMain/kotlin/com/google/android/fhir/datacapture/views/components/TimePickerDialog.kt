@@ -16,14 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.cancel
-import android_fhir.datacapture_kmp.generated.resources.ic_access_time
-import android_fhir.datacapture_kmp.generated.resources.ic_keyboard
-import android_fhir.datacapture_kmp.generated.resources.ok
-import android_fhir.datacapture_kmp.generated.resources.select_time
-import android_fhir.datacapture_kmp.generated.resources.switch_to_clock_input
-import android_fhir.datacapture_kmp.generated.resources.switch_to_text_input
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +36,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.cancel
+import com.google.fhir.datacapture_kmp.generated.resources.ic_access_time
+import com.google.fhir.datacapture_kmp.generated.resources.ic_keyboard
+import com.google.fhir.datacapture_kmp.generated.resources.ok
+import com.google.fhir.datacapture_kmp.generated.resources.select_time
+import com.google.fhir.datacapture_kmp.generated.resources.switch_to_clock_input
+import com.google.fhir.datacapture_kmp.generated.resources.switch_to_text_input
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

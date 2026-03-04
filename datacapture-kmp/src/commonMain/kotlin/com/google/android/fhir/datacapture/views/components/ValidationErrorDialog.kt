@@ -16,12 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_fix_button_text
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_headline
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_item_text_with_bullet
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_submit_button_text
-import android_fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_supporting_text
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -33,6 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_fix_button_text
+import com.google.fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_headline
+import com.google.fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_item_text_with_bullet
+import com.google.fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_submit_button_text
+import com.google.fhir.datacapture_kmp.generated.resources.questionnaire_validation_error_supporting_text
 import org.jetbrains.compose.resources.stringResource
 
 /** Dialog shown when validation errors are found on questionnaire submission. */

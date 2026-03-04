@@ -16,9 +16,9 @@
 
 package com.google.android.fhir.datacapture.validation
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.regex_validation_error_msg
 import co.touchlab.kermit.Logger
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.regex_validation_error_msg
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.QuestionnaireResponse
 import org.jetbrains.compose.resources.getString
