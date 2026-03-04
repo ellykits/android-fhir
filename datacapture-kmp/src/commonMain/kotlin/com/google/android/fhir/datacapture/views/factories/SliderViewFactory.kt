@@ -129,8 +129,7 @@ internal object SliderViewFactory : QuestionnaireItemViewFactory {
       when (it) {
         is Extension.Value.Decimal -> it.value.value?.floatValue()
         is Extension.Value.Integer -> it.value.value?.toFloat()
-        else ->
-          throw IllegalArgumentException("Type ${it::class.qualifiedName} not supported for slider")
+        else -> throw IllegalArgumentException()
       }
     }
       ?: ifNull
