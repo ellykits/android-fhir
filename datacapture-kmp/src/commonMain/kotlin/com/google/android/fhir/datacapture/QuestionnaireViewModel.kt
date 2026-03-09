@@ -323,9 +323,6 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
   /** Tracks modifications in order to update the UI. */
   private val modificationCount = MutableStateFlow(0)
 
-  private val _submissionCount = MutableStateFlow(0)
-  val submissionCount: StateFlow<Int> = _submissionCount
-
   /** Toggles review mode. */
   private val isInReviewModeFlow = MutableStateFlow(shouldShowReviewPageFirst)
 
@@ -873,10 +870,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
             if (showSubmitButton) {
               QuestionnaireNavigationViewUIState.Enabled(
                 submitButtonText.ifEmpty { getString(Res.string.submit_questionnaire) },
-                {
-                  _submissionCount.update { it + 1 }
-                  onSubmitButtonClickListener.invoke()
-                },
+                { onSubmitButtonClickListener.invoke() },
               )
             } else {
               QuestionnaireNavigationViewUIState.Hidden
@@ -960,10 +954,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
           if (showSubmitButton) {
             QuestionnaireNavigationViewUIState.Enabled(
               submitButtonText.ifEmpty { getString(Res.string.submit_questionnaire) },
-              {
-                _submissionCount.update { it + 1 }
-                onSubmitButtonClickListener.invoke()
-              },
+              { onSubmitButtonClickListener.invoke() },
             )
           } else {
             QuestionnaireNavigationViewUIState.Hidden

@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -135,33 +134,27 @@ fun Questionnaire(
     viewModel(key = questionnaireJson) { QuestionnaireViewModel(stateMap) }
   val flattenedQuestionnaireItems =
     remember(viewModel.questionnaire) { viewModel.questionnaire.item.flattened() }
-  val submitClicked: Int by viewModel.submissionCount.collectAsState()
 
   var showValidationDialog by remember { mutableStateOf(false) }
   var invalidFields by remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
 
-  var submitClickIsOnFirstLaunchComposition by remember { mutableStateOf(true) }
-
-  LaunchedEffect(submitClicked) {
-    if (submitClickIsOnFirstLaunchComposition) {
-      submitClickIsOnFirstLaunchComposition = false
-      return@LaunchedEffect
-    }
-
-    onSubmit {
-      val invalidValidationLinkIds =
-        viewModel.validateQuestionnaireUpdateUIAndGetErrorFields(flattenedQuestionnaireItems)
-      if (invalidValidationLinkIds.isNotEmpty()) {
-        invalidFields = invalidValidationLinkIds
-        showValidationDialog = true
-        throw CancellationException()
-      } else {
-        return@onSubmit viewModel.getQuestionnaireResponse()
+  LaunchedEffect(Unit) {
+    viewModel.setOnSubmitButtonClickListener {
+      onSubmit {
+        val invalidValidationLinkIds =
+          viewModel.validateQuestionnaireUpdateUIAndGetErrorFields(flattenedQuestionnaireItems)
+        if (invalidValidationLinkIds.isNotEmpty()) {
+          invalidFields = invalidValidationLinkIds
+          showValidationDialog = true
+          throw CancellationException()
+        } else {
+          return@onSubmit viewModel.getQuestionnaireResponse()
+        }
       }
     }
   }
 
-  LaunchedEffect(onCancel) { viewModel.setOnCancelButtonClickListener { onCancel() } }
+  LaunchedEffect(Unit) { viewModel.setOnCancelButtonClickListener { onCancel() } }
 
   Box(modifier = Modifier.fillMaxSize()) {
     QuestionnaireScreen(
