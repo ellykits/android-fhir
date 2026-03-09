@@ -61,7 +61,7 @@ class LayoutListViewModel : ViewModel() {
       showReviewPageFirst = true,
     ),
     READ_ONLY(
-      "layout_default.json", // Reuse default for demo
+      "layout_review.json",
       Res.drawable.ic_readonlylayout,
       Res.string.layout_name_read_only,
       isReadOnly = true,
