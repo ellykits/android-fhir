@@ -126,7 +126,7 @@ class EnablementEvaluatorTest {
   }
 
   @Test
-  fun `evaluate() should evaluate enableWhenExpression`() = runTest {
+  fun evaluate_ShouldEvaluateEnableWhenExpression() = runTest {
     val questionnaireJson =
       """
         {
@@ -205,7 +205,7 @@ class EnablementEvaluatorTest {
   }
 
   @Test
-  fun `evaluate() should evaluate false enableWhenExpression`() = runTest {
+  fun evaluateShouldEvaluateFalseEnableWhenExpression() = runTest {
     val questionnaireJson =
       """
         {
@@ -281,10 +281,9 @@ class EnablementEvaluatorTest {
   }
 
   @Test
-  fun `evaluate() should evaluate enableWhenExpression with %context fhirpath supplement literal`() =
-    runTest {
-      val questionnaireJson =
-        """
+  fun evaluate_ShouldEvaluateEnableWhenExpressionWithContextFhirpathSupplementLiteral() = runTest {
+    val questionnaireJson =
+      """
     {
       "resourceType": "Questionnaire",
       "status": "active",
@@ -313,10 +312,10 @@ class EnablementEvaluatorTest {
       ]
     }
                 """
-          .trimIndent()
+        .trimIndent()
 
-      val questionnaireResponseJson =
-        """
+    val questionnaireResponseJson =
+      """
     {
       "resourceType": "QuestionnaireResponse",
       "status": "completed",
@@ -339,30 +338,29 @@ class EnablementEvaluatorTest {
       ]
     }
                 """
-          .trimIndent()
+        .trimIndent()
 
-      val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
 
-      val questionnaireItem: Questionnaire.Item =
-        questionnaire.item.find { it.linkId.value == "female" }!!
+    val questionnaireItem: Questionnaire.Item =
+      questionnaire.item.find { it.linkId.value == "female" }!!
 
-      val questionnaireResponse =
-        json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+    val questionnaireResponse =
+      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
 
-      assertTrue(
-        EnablementEvaluator(questionnaire, questionnaireResponse)
-          .evaluate(
-            questionnaireItem,
-            questionnaireResponse.item[1],
-          ),
-      )
-    }
+    assertTrue(
+      EnablementEvaluator(questionnaire, questionnaireResponse)
+        .evaluate(
+          questionnaireItem,
+          questionnaireResponse.item[1],
+        ),
+    )
+  }
 
   @Test
-  fun `evaluate() should evaluate enableWhenExpression with %questionnaire fhirpath supplement`() =
-    runTest {
-      val questionnaireJson =
-        """
+  fun evaluate_ShouldEvaluateEnableWhenExpressionWithQuestionnaireFhirpathSupplement() = runTest {
+    val questionnaireJson =
+      """
     {
       "resourceType": "Questionnaire",
       "subjectType": [ "Practitioner" ],
@@ -386,10 +384,10 @@ class EnablementEvaluatorTest {
       ]
     }
                 """
-          .trimIndent()
+        .trimIndent()
 
-      val questionnaireResponseJson =
-        """
+    val questionnaireResponseJson =
+      """
     {
       "resourceType": "QuestionnaireResponse",
       "status": "completed",
@@ -408,27 +406,26 @@ class EnablementEvaluatorTest {
       ]
     }
                 """
-          .trimIndent()
+        .trimIndent()
 
-      val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
 
-      val questionnaireResponse =
-        json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+    val questionnaireResponse =
+      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
 
-      assertTrue(
-        EnablementEvaluator(questionnaire, questionnaireResponse)
-          .evaluate(
-            questionnaire.item[0],
-            questionnaireResponse.item[0],
-          ),
-      )
-    }
+    assertTrue(
+      EnablementEvaluator(questionnaire, questionnaireResponse)
+        .evaluate(
+          questionnaire.item[0],
+          questionnaireResponse.item[0],
+        ),
+    )
+  }
 
   @Test
-  fun `evaluate() should evaluate enableWhenExpression with %qItem fhirpath supplement`() =
-    runTest {
-      val questionnaireJson =
-        """
+  fun evaluate_shouldEvaluateEnableWhenExpressionWithQItemFhirpathSupplement() = runTest {
+    val questionnaireJson =
+      """
     {
         "resourceType": "Questionnaire",
         "subjectType": [ "Practitioner" ],
@@ -452,10 +449,10 @@ class EnablementEvaluatorTest {
         ]
     }
                 """
-          .trimIndent()
+        .trimIndent()
 
-      val questionnaireResponseJson =
-        """
+    val questionnaireResponseJson =
+      """
     {
       "resourceType": "QuestionnaireResponse",
       "status": "completed",
@@ -474,21 +471,21 @@ class EnablementEvaluatorTest {
       ]
     }
                 """
-          .trimIndent()
+        .trimIndent()
 
-      val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
+    val questionnaire = json.decodeFromString(questionnaireJson) as Questionnaire
 
-      val questionnaireResponse =
-        json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
+    val questionnaireResponse =
+      json.decodeFromString(questionnaireResponseJson) as QuestionnaireResponse
 
-      assertTrue(
-        EnablementEvaluator(questionnaire, questionnaireResponse)
-          .evaluate(
-            questionnaire.item[0],
-            questionnaireResponse.item[0],
-          ),
-      )
-    }
+    assertTrue(
+      EnablementEvaluator(questionnaire, questionnaireResponse)
+        .evaluate(
+          questionnaire.item[0],
+          questionnaireResponse.item[0],
+        ),
+    )
+  }
 
   @Test
   fun evaluate_expectAnswerDoesNotExist_answerDoesNotExist_shouldReturnTrue() = runTest {
