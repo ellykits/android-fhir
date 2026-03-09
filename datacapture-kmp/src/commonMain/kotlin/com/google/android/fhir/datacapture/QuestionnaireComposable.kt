@@ -28,10 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.fhir.datacapture.extensions.flattened
-import com.google.android.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
-import com.google.android.fhir.datacapture.extensions.localizedPrefixAnnotatedString
-import com.google.android.fhir.datacapture.extensions.localizedTextAnnotatedString
-import com.google.android.fhir.datacapture.validation.Invalid
 import com.google.android.fhir.datacapture.views.components.ValidationErrorDialog
 import com.google.fhir.model.r4.QuestionnaireResponse
 import kotlin.coroutines.cancellation.CancellationException
@@ -49,8 +45,10 @@ import kotlin.coroutines.cancellation.CancellationException
  * @param isReadOnly Whether the questionnaire is read-only (default: false)
  * @param showAsterisk Whether to show asterisk for required fields (default: true)
  * @param showRequiredText Whether to show "required" text (default: false)
+ * @param showNavigationLongScroll: Boolean = false,
  * @param showOptionalText Whether to show "optional" text (default: false)
  * @param submitButtonText Custom text for submit button (optional)
+ * @param showSubmitAnywayWhenValidationFails: Boolean = true,
  * @param matchersProvider Custom matchers provider for custom question types (optional)
  * @param onSubmit Callback invoked when user submits the questionnaire with the response
  * @param onCancel Callback invoked when user cancels the questionnaire
@@ -134,28 +132,19 @@ fun Questionnaire(
 
   val viewModel: QuestionnaireViewModel =
     viewModel(key = questionnaireJson) { QuestionnaireViewModel(stateMap) }
+  val flattenedQuestionnaireItems =
+    remember(viewModel.questionnaire) { viewModel.questionnaire.item.flattened() }
 
   var showValidationDialog by remember { mutableStateOf(false) }
   var invalidFields by remember { mutableStateOf<List<AnnotatedString>>(emptyList()) }
 
-  LaunchedEffect(onSubmit) {
+  LaunchedEffect(Unit) {
     viewModel.setOnSubmitButtonClickListener {
       onSubmit {
-        val validationResults = viewModel.validateQuestionnaireAndUpdateUI()
-        val validationResultHasInvalid = validationResults.values.flatten().any { it is Invalid }
-
-        if (validationResultHasInvalid) {
-          val map =
-            validationResults.filterValues { it.any { validation -> validation is Invalid } }
-          invalidFields =
-            viewModel.questionnaire.item
-              .flattened()
-              .filter { it.linkId.value!! in map }
-              .mapNotNull {
-                it.localizedTextAnnotatedString?.takeIfNotBlank()
-                  ?: it.item.localizedFlyoverAnnotatedString ?: it.localizedPrefixAnnotatedString
-              }
-
+        val invalidValidationLinkIds =
+          viewModel.validateQuestionnaireUpdateUIAndGetErrorFields(flattenedQuestionnaireItems)
+        if (invalidValidationLinkIds.isNotEmpty()) {
+          invalidFields = invalidValidationLinkIds
           showValidationDialog = true
           throw CancellationException()
         } else {
@@ -165,7 +154,7 @@ fun Questionnaire(
     }
   }
 
-  LaunchedEffect(onCancel) { viewModel.setOnCancelButtonClickListener { onCancel() } }
+  LaunchedEffect(Unit) { viewModel.setOnCancelButtonClickListener { onCancel() } }
 
   Box(modifier = Modifier.fillMaxSize()) {
     QuestionnaireScreen(
@@ -196,5 +185,3 @@ private object EmptyQuestionnaireItemViewHolderFactoryMatchersProvider :
   QuestionnaireItemViewHolderFactoryMatchersProvider() {
   override fun get() = emptyList<QuestionnaireItemViewHolderFactoryMatcher>()
 }
-
-private fun AnnotatedString.takeIfNotBlank(): AnnotatedString? = takeIf { it.isNotBlank() }

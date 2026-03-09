@@ -19,6 +19,7 @@ package com.google.android.fhir.datacapture
 import android_fhir.datacapture_kmp.generated.resources.Res
 import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.annotation.VisibleForTesting
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
@@ -42,6 +43,8 @@ import com.google.android.fhir.datacapture.extensions.isHelpCode
 import com.google.android.fhir.datacapture.extensions.isHidden
 import com.google.android.fhir.datacapture.extensions.isPaginated
 import com.google.android.fhir.datacapture.extensions.isRepeatedGroup
+import com.google.android.fhir.datacapture.extensions.localizedFlyoverAnnotatedString
+import com.google.android.fhir.datacapture.extensions.localizedPrefixAnnotatedString
 import com.google.android.fhir.datacapture.extensions.localizedTextAnnotatedString
 import com.google.android.fhir.datacapture.extensions.maxValue
 import com.google.android.fhir.datacapture.extensions.minValue
@@ -581,6 +584,22 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
         }
       }
 
+  internal suspend fun validateQuestionnaireUpdateUIAndGetErrorFields(
+    questionnaireItems: List<Questionnaire.Item>,
+  ): List<AnnotatedString> {
+    val validationLinkIdInvalidMap =
+      validateQuestionnaireAndUpdateUI().filterValues {
+        it.any { validation -> validation is Invalid }
+      }
+    return questionnaireItems
+      .filter { it.linkId.value!! in validationLinkIdInvalidMap }
+      .mapNotNull {
+        it.localizedTextAnnotatedString?.takeIf { text -> text.isNotBlank() }
+          ?: it.item.localizedFlyoverAnnotatedString?.takeIf { text -> text.isNotBlank() }
+            ?: it.localizedPrefixAnnotatedString
+      }
+  }
+
   internal fun goToPreviousPage() {
     when (entryMode) {
       EntryMode.PRIOR_EDIT,
@@ -851,7 +870,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
             if (showSubmitButton) {
               QuestionnaireNavigationViewUIState.Enabled(
                 submitButtonText.ifEmpty { getString(Res.string.submit_questionnaire) },
-                onSubmitButtonClickListener,
+                { onSubmitButtonClickListener.invoke() },
               )
             } else {
               QuestionnaireNavigationViewUIState.Hidden
@@ -935,7 +954,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
           if (showSubmitButton) {
             QuestionnaireNavigationViewUIState.Enabled(
               submitButtonText.ifEmpty { getString(Res.string.submit_questionnaire) },
-              onSubmitButtonClickListener,
+              { onSubmitButtonClickListener.invoke() },
             )
           } else {
             QuestionnaireNavigationViewUIState.Hidden

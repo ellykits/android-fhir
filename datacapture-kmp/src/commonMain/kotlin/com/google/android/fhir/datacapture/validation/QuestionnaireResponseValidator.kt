@@ -146,7 +146,7 @@ object QuestionnaireResponseValidator {
     when {
       questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Display -> Unit
       (questionnaireItem.type.value == Questionnaire.QuestionnaireItemType.Group &&
-        questionnaireItem.repeats?.value == false) ->
+        questionnaireItem.repeats?.value != true) ->
         // Nested items under group
         // http://www.hl7.org/fhir/questionnaireresponse-definitions.html#QuestionnaireResponse.item.item
         validateQuestionnaireResponseItems(
