@@ -104,13 +104,36 @@ kotlin {
 
     androidMain { resources.srcDir("res") }
 
+    getByName("androidDeviceTest") {
+      dependencies {
+        implementation(libs.androidx.compose.ui.test.junit4)
+        implementation(libs.androidx.compose.ui.test.manifest)
+        implementation(libs.androidx.test.core)
+        implementation(libs.androidx.test.ext.junit)
+        implementation(libs.androidx.test.ext.junit.ktx)
+        implementation(libs.androidx.test.runner)
+        implementation(libs.androidx.test.rules)
+        implementation(libs.kotlinx.coroutines.test)
+        implementation(libs.truth)
+      }
+    }
+
+    getByName("androidHostTest") {
+      dependencies {
+        implementation(libs.androidx.fragment.testing)
+        implementation(libs.androidx.test.core)
+        implementation(libs.junit)
+        implementation(libs.kotlin.test.junit)
+        implementation(libs.kotlinx.coroutines.test)
+        implementation(libs.truth)
+      }
+    }
+
     val desktopMain by getting {
       dependencies {
         implementation(compose.desktop.currentOs)
         implementation(libs.kotlinx.coroutines.swing)
       }
     }
-
-    iosMain { dependencies {} }
   }
 }

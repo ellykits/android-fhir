@@ -51,6 +51,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -120,20 +121,8 @@ fun QuestionnaireScreen(
       modifier = Modifier.fillMaxSize().padding(paddingValues),
       color = Color(0xFFF5F5F5),
     ) {
-      Column(modifier = Modifier.fillMaxSize()) {
-        if (title == skipLogicTitle || title == calculatedExpressionTitle) {
-          InfoCard(
-            title = title,
-            info =
-              if (title == skipLogicTitle) {
-                stringResource(Res.string.behavior_name_skip_logic_info)
-              } else {
-                stringResource(Res.string.behavior_name_calculated_expression_info)
-              },
-          )
-        }
-
-        Box(modifier = Modifier.weight(1f)) {
+      Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
           questionnaireJson?.let { json ->
             Questionnaire(
               questionnaireJson = json,
@@ -155,21 +144,34 @@ fun QuestionnaireScreen(
           }
             ?: run { Text(stringResource(Res.string.loading), modifier = Modifier.padding(16.dp)) }
         }
+
+        if (title == skipLogicTitle || title == calculatedExpressionTitle) {
+          InfoCard(
+            modifier = Modifier.fillMaxWidth().align(BiasAlignment(0f, 0.8f)).padding(16.dp),
+            title = title,
+            info =
+              if (title == skipLogicTitle) {
+                stringResource(Res.string.behavior_name_skip_logic_info)
+              } else {
+                stringResource(Res.string.behavior_name_calculated_expression_info)
+              },
+          )
+        }
       }
     }
   }
 }
 
 @Composable
-fun InfoCard(title: String, info: String) {
+fun InfoCard(title: String, info: String, modifier: Modifier = Modifier) {
   Card(
-    modifier = Modifier.fillMaxWidth().padding(16.dp),
+    modifier = modifier,
     colors =
       CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
       ),
   ) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
           painter = painterResource(Res.drawable.ic_info_24),

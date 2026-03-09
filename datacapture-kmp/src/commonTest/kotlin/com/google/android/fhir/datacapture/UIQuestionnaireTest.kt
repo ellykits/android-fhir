@@ -65,6 +65,7 @@ import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.FhirR4Json
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.terminologies.PublicationStatus
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import org.jetbrains.compose.resources.getString
 
@@ -73,6 +74,7 @@ class UIQuestionnaireTest {
 
   private val fhirR4Json = FhirR4Json()
 
+  @BeforeTest
   @Test
   fun shouldDisplayReviewButtonWhenNoMorePagesToDisplay() = runComposeUiTest {
     setQuestionnaireContent("files/paginated_questionnaire_with_dependent_answer.json", true)
