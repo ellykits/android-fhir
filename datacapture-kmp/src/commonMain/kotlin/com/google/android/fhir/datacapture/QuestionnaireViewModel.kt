@@ -1251,11 +1251,12 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
         responseItemKeys.contains(questionnaireItem.linkId) &&
           enablementEvaluator.evaluate(questionnaireItem, questionnaireResponseItem)
       ) {
-        questionnaireResponseItem.toBuilder().apply {
+        val questionnaireResponseItemBuilder = questionnaireResponseItem.toBuilder()
+        questionnaireResponseItemBuilder.apply {
           if (text?.value.isNullOrBlank()) {
             text =
-              text.apply {
-                this?.value = questionnaireItem.localizedTextAnnotatedString?.toString()
+              questionnaireItem.localizedTextAnnotatedString?.toString()?.let {
+                com.google.fhir.model.r4.String.Builder().apply { value = it }
               }
           }
           // Nested group items
@@ -1276,7 +1277,7 @@ internal class QuestionnaireViewModel(state: Map<String, Any>) : ViewModel() {
                 .toMutableList()
           }
         }
-        result.add(questionnaireResponseItem.toBuilder())
+        result.add(questionnaireResponseItemBuilder)
       }
     }
     return result
