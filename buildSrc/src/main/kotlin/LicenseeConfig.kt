@@ -226,7 +226,8 @@ private fun Project.configureLicensee() {
     allowDependency("ch.qos.logback", "logback-core", "1.4.14") { because("LGPL") }
 
     // KMP FileKit
-    allowUrl("https://github.com/vinceglb/FileKit/blob/main/LICENSE") { because("MIT License") }
+    allowUrl("https://github.com/vinceglb/FileKit/blob/main/LICENSE") { because("") }
+    allowUrl("https://github.com/hypfvieh/dbus-java/blob/master/LICENSE") { because("") }
   }
 }
 

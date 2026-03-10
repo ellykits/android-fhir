@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
@@ -42,9 +43,7 @@ android {
 }
 
 kotlin {
-  androidTarget {
-    compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11) }
-  }
+  androidTarget { compilerOptions { jvmTarget.set(JvmTarget.JVM_11) } }
 
   jvm("desktop")
 
@@ -76,11 +75,6 @@ kotlin {
 
   sourceSets {
     androidMain.dependencies {
-      implementation(libs.androidx.appcompat)
-      implementation(libs.androidx.constraintlayout)
-      implementation(libs.androidx.core)
-      implementation(libs.androidx.fragment)
-      implementation(libs.material)
       // TODO restore after these libraries are migrated to Kotlin Multiplatform
       //      implementation(project(":engine"))
       //      implementation(project(":contrib:barcode"))
