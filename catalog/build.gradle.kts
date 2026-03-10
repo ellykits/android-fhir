@@ -75,6 +75,9 @@ kotlin {
 
   sourceSets {
     androidMain.dependencies {
+      implementation(libs.androidx.appcompat)
+      implementation(libs.androidx.core)
+      implementation(libs.material)
       // TODO restore after these libraries are migrated to Kotlin Multiplatform
       //      implementation(project(":engine"))
       //      implementation(project(":contrib:barcode"))
