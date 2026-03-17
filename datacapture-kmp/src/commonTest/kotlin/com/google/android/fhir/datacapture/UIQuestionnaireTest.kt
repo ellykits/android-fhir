@@ -38,10 +38,8 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performSemanticsAction
-import androidx.compose.ui.test.printToLog
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
@@ -52,7 +50,6 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import com.google.android.fhir.datacapture.extensions.FhirR4String
 import com.google.android.fhir.datacapture.views.components.ADD_REPEATED_GROUP_BUTTON_TAG
 import com.google.android.fhir.datacapture.views.components.DELETE_REPEATED_GROUP_ITEM_BUTTON_TAG
-import com.google.android.fhir.datacapture.views.components.ERROR_TEXT_TAG
 import com.google.android.fhir.datacapture.views.components.HINT_HEADER_TAG
 import com.google.android.fhir.datacapture.views.components.QUESTIONNAIRE_BOTTOM_NAVIGATION_TEST_TAG
 import com.google.android.fhir.datacapture.views.components.QUESTIONNAIRE_PAGE_NAVIGATION_BUTTON_TEST_TAG
@@ -133,7 +130,6 @@ class UIQuestionnaireTest {
   fun cqfExpression_shouldSetText_withEvaluatedAnswer() = runComposeUiTest {
     setQuestionnaireContent("files/questionnaire_with_dynamic_question_text.json")
 
-    onRoot().printToLog("Anyting!!!")
     onNode(hasTestTag(QUESTION_HEADER_TAG) and hasText("Option Date")).assertIsDisplayed()
     onNode(hasTestTag(QUESTION_HEADER_TAG) and hasText("Provide \"First Option\" Date"))
       .assertDoesNotExist()
@@ -516,14 +512,13 @@ class UIQuestionnaireTest {
     }
 
   @Test
-  fun showErrorOnSliderViewProgressAboveMaxValue() = runComposeUiTest {
+  fun sliderViewShouldLimitToMaxWhenProgressIsSetAboveMaxValue() = runComposeUiTest {
     setQuestionnaireContent("files/component_slider.json")
     onNodeWithTag(SLIDER_TAG).performSemanticsAction(SemanticsActions.SetProgress) {
       it.invoke(20f)
     }
-    onRoot().printToLog("Just Anything!!")
-    onNodeWithTag(ERROR_TEXT_TAG).assertIsDisplayed()
-    onNodeWithTag(ERROR_TEXT_TAG).assertTextEquals("Maximum value allowed is:15 ")
+    onNodeWithTag(SLIDER_TAG)
+      .assertRangeInfoEquals(ProgressBarRangeInfo(current = 15f, range = 0f..15f, steps = 14))
   }
 
   @Test

@@ -47,18 +47,21 @@ kotlin {
 
   jvm("desktop")
 
-  @OptIn(ExperimentalWasmDsl::class)
-  wasmJs {
-    browser {
-      val rootProjectDir = rootProject.projectDir.path
-      commonWebpackConfig {
-        devServer =
-          (devServer ?: KotlinWebpackConfig.DevServer()).copy(
-            static = (devServer?.static ?: mutableListOf()).apply { add(rootProjectDir) },
-          )
+  val isWasmEnabled = project.findProperty("catalog.wasm.enabled") == "true"
+  if (isWasmEnabled) {
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+      browser {
+        val rootProjectDir = rootProject.projectDir.path
+        commonWebpackConfig {
+          devServer =
+            (devServer ?: KotlinWebpackConfig.DevServer()).copy(
+              static = (devServer?.static ?: mutableListOf()).apply { add(rootProjectDir) },
+            )
+        }
       }
+      binaries.executable()
     }
-    binaries.executable()
   }
 
   listOf(
