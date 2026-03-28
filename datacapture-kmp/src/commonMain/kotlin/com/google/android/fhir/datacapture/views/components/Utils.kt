@@ -16,12 +16,12 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.optional_helper_text
-import android_fhir.datacapture_kmp.generated.resources.required
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.google.android.fhir.datacapture.views.QuestionnaireViewItem
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.optional_helper_text
+import com.google.fhir.datacapture_kmp.generated.resources.required
 import org.jetbrains.compose.resources.stringResource
 
 /**

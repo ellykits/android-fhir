@@ -16,8 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.factories
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.min_value_less_than_max_value_validation_error_msg
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,6 +36,8 @@ import com.google.android.fhir.datacapture.views.components.ErrorText
 import com.google.android.fhir.datacapture.views.components.Header
 import com.google.android.fhir.datacapture.views.components.MediaItem
 import com.google.android.fhir.datacapture.views.components.SliderItem
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.min_value_less_than_max_value_validation_error_msg
 import com.google.fhir.model.r4.Extension
 import com.google.fhir.model.r4.QuestionnaireResponse
 import kotlinx.coroutines.Dispatchers

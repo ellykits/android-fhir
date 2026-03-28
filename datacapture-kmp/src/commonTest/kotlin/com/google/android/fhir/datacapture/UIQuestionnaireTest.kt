@@ -16,12 +16,6 @@
 
 package com.google.android.fhir.datacapture
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_next
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_previous
-import android_fhir.datacapture_kmp.generated.resources.button_review
-import android_fhir.datacapture_kmp.generated.resources.edit_button_text
-import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
@@ -58,6 +52,12 @@ import com.google.android.fhir.datacapture.views.components.REPEATED_GROUP_INSTA
 import com.google.android.fhir.datacapture.views.components.SLIDER_TAG
 import com.google.android.fhir.datacapture.views.factories.NO_CHOICE_RADIO_BUTTON_TAG
 import com.google.android.fhir.datacapture.views.factories.YES_CHOICE_RADIO_BUTTON_TAG
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.button_pagination_next
+import com.google.fhir.datacapture_kmp.generated.resources.button_pagination_previous
+import com.google.fhir.datacapture_kmp.generated.resources.button_review
+import com.google.fhir.datacapture_kmp.generated.resources.edit_button_text
+import com.google.fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import com.google.fhir.model.r4.Enumeration
 import com.google.fhir.model.r4.FhirR4Json
 import com.google.fhir.model.r4.Questionnaire

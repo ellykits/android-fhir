@@ -16,8 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.factories
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.required_text_and_new_line
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -56,6 +54,8 @@ import com.google.android.fhir.datacapture.views.components.OptionSelectOption
 import com.google.android.fhir.datacapture.views.components.SelectedOptions
 import com.google.android.fhir.datacapture.views.components.getRequiredOrOptionalText
 import com.google.android.fhir.datacapture.views.isAnswerOptionSelected
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.required_text_and_new_line
 import com.google.fhir.model.r4.Questionnaire
 import com.google.fhir.model.r4.QuestionnaireResponse
 import kotlinx.coroutines.Dispatchers

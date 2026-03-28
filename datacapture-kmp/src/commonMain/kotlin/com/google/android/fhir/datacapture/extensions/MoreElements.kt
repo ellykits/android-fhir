@@ -16,12 +16,12 @@
 
 package com.google.android.fhir.datacapture.extensions
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.no
-import android_fhir.datacapture_kmp.generated.resources.yes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.google.android.fhir.datacapture.getLocalDateTimeFormatter
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.no
+import com.google.fhir.datacapture_kmp.generated.resources.yes
 import com.google.fhir.model.r4.Attachment
 import com.google.fhir.model.r4.Coding
 import com.google.fhir.model.r4.Date

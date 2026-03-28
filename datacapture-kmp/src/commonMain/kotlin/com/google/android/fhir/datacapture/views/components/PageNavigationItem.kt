@@ -16,12 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_next
-import android_fhir.datacapture_kmp.generated.resources.button_pagination_previous
-import android_fhir.datacapture_kmp.generated.resources.button_review
-import android_fhir.datacapture_kmp.generated.resources.cancel_questionnaire
-import android_fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,6 +36,12 @@ import androidx.compose.ui.unit.dp
 import com.google.android.fhir.datacapture.QuestionnaireNavigationUIState
 import com.google.android.fhir.datacapture.QuestionnaireNavigationViewUIState
 import com.google.android.fhir.datacapture.theme.QuestionnaireTheme
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.button_pagination_next
+import com.google.fhir.datacapture_kmp.generated.resources.button_pagination_previous
+import com.google.fhir.datacapture_kmp.generated.resources.button_review
+import com.google.fhir.datacapture_kmp.generated.resources.cancel_questionnaire
+import com.google.fhir.datacapture_kmp.generated.resources.submit_questionnaire
 import org.jetbrains.compose.resources.stringResource
 
 internal const val QUESTIONNAIRE_PAGE_NAVIGATION_BUTTON_TEST_TAG = "page_navigation_button"

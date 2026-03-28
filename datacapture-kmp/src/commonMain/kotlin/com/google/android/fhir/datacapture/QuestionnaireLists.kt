@@ -16,8 +16,6 @@
 
 package com.google.android.fhir.datacapture
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.not_answered
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -75,6 +73,8 @@ import com.google.android.fhir.datacapture.views.factories.QuestionnaireItemView
 import com.google.android.fhir.datacapture.views.factories.RadioGroupViewFactory
 import com.google.android.fhir.datacapture.views.factories.SliderViewFactory
 import com.google.android.fhir.datacapture.views.factories.TimeViewFactory
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.not_answered
 import com.google.fhir.model.r4.Questionnaire
 import kotlin.uuid.ExperimentalUuidApi
 import org.jetbrains.compose.resources.stringResource

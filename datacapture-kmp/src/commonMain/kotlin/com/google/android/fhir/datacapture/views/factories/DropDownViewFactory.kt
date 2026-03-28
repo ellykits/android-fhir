@@ -16,9 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.factories
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.hyphen
-import android_fhir.datacapture_kmp.generated.resources.required_text_and_new_line
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,6 +36,9 @@ import com.google.android.fhir.datacapture.views.components.DropDownAnswerOption
 import com.google.android.fhir.datacapture.views.components.Header
 import com.google.android.fhir.datacapture.views.components.MediaItem
 import com.google.android.fhir.datacapture.views.components.getRequiredOrOptionalText
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.hyphen
+import com.google.fhir.datacapture_kmp.generated.resources.required_text_and_new_line
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

@@ -16,10 +16,6 @@
 
 package com.google.android.fhir.datacapture.views.components
 
-import android_fhir.datacapture_kmp.generated.resources.Res
-import android_fhir.datacapture_kmp.generated.resources.gm_schedule_24
-import android_fhir.datacapture_kmp.generated.resources.select_time
-import android_fhir.datacapture_kmp.generated.resources.time
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,6 +42,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import com.google.android.fhir.datacapture.getLocalDateTimeFormatter
+import com.google.fhir.datacapture_kmp.generated.resources.Res
+import com.google.fhir.datacapture_kmp.generated.resources.gm_schedule_24
+import com.google.fhir.datacapture_kmp.generated.resources.select_time
+import com.google.fhir.datacapture_kmp.generated.resources.time
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
